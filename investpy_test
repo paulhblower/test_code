@@ -1,0 +1,33 @@
+import pandas as pd
+import investpy
+
+countries = ['try', 'inr']
+
+def fx_data_reader(countries):
+  for x in countries:
+      fx_sheet_name = x + '_fx'
+      df1 = pd.read_excel('chartbook_data.xlsx', sheet_name=fx_sheet_name, index_col=0, header=0, engine='openpyxl')
+      print(df1)
+
+fx_data_reader(countries)
+
+writer = pd.ExcelWriter('chartbook_data.xlsx', engine='xlsxwriter')
+
+def fx_data(countries):
+  for x in countries:
+      fx_sheet_name = x + '_fx'
+      df2 = investpy.get_currency_cross_recent_data(currency_cross='USD/' + x, order='descending')
+      df3 = df2[['Close']]
+      print(df3)
+
+      # Here is the problem
+
+      # combine = [df1, df3]
+      # df4 = pd.concat(combine)
+      # df5 = df4.drop_duplicates(subset=['A'])
+
+      # df5.to_excel(writer, sheet_name=fx_sheet_name, index=True, header=True)
+      # print(df5)
+
+fx_data(countries)
+writer.save()
